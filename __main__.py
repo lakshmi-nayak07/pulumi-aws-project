@@ -173,6 +173,23 @@ echo "Hello from Pulumi Web Server" > /var/www/html/index.html
     tags={"Name": "web-ec2"}
 )
 
+# Web Server 2
+web_server_2 = aws.ec2.Instance("web-server-2",
+    ami=ubuntu_ami.id,
+    instance_type="t3.micro",
+    subnet_id=web_subnet.id,
+    key_name=key.key_name,
+    vpc_security_group_ids=[web_sg.id],
+    user_data="""#!/bin/bash
+apt update -y
+apt install -y apache2
+systemctl start apache2
+systemctl enable apache2
+echo "Hello from Pulumi Web Server 2" > /var/www/html/index.html
+""",
+    tags={"Name": "web-ec2-2"}
+)
+
 # App Server
 app_server = aws.ec2.Instance("app-server",
     ami=ubuntu_ami.id,
@@ -187,5 +204,6 @@ app_server = aws.ec2.Instance("app-server",
 # Outputs
 # ---------------------------
 pulumi.export("web_server_public_ip", web_server.public_ip)
+pulumi.export("web_server_2_public_ip", web_server_2.public_ip)
 pulumi.export("app_server_private_ip", app_server.private_ip)
 pulumi.export("vpc_id", vpc.id)
