@@ -42,6 +42,13 @@ app_subnet = aws.ec2.Subnet("app-subnet",
     tags={"Name": "app-private-subnet"}
 )
 
+test_subnet = aws.ec2.Subnet("test",
+    vpc_id=vpc.id,
+    cidr_block="172.16.2.0/24",
+    availability_zone="eu-north-1a",
+    tags={"Name": "test"}
+)
+
 # ---------------------------
 # Internet Gateway
 # ---------------------------
